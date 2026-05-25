@@ -1,0 +1,31 @@
+<odoo>
+
+    <!-- ============================================= -->
+    <!-- Record Rules                                  -->
+    <!-- ============================================= -->
+
+    <!-- HMS User: can only access patients they created -->
+    <record id="rule_patient_user_own" model="ir.rule">
+        <field name="name">HMS User: Own Patients Only</field>
+        <field name="model_id" ref="model_hms_patient"/>
+        <field name="groups" eval="[(4, ref('group_hms_user'))]"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- HMS Manager: full access to all patients (override) -->
+    <record id="rule_patient_manager_all" model="ir.rule">
+        <field name="name">HMS Manager: All Patients</field>
+        <field name="model_id" ref="model_hms_patient"/>
+        <field name="groups" eval="[(4, ref('group_hms_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+</odoo>

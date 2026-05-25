@@ -1,82 +1,43 @@
 <odoo>
 
-    <record id="doctor_tree_view"
-            model="ir.ui.view">
-
-        <field name="name">
-            hms.doctors.tree
-        </field>
-
-        <field name="model">
-            hms.doctors
-        </field>
-
+    <record id="doctor_tree_view" model="ir.ui.view">
+        <field name="name">hms.doctors.list</field>
+        <field name="model">hms.doctors</field>
         <field name="arch" type="xml">
-
-            <tree>
-
+            <list>
                 <field name="first_name"/>
-
                 <field name="last_name"/>
-
-            </tree>
-
+            </list>
         </field>
-
     </record>
 
-
-    <record id="doctor_form_view"
-            model="ir.ui.view">
-
-        <field name="name">
-            hms.doctors.form
-        </field>
-
-        <field name="model">
-            hms.doctors
-        </field>
-
+    <record id="doctor_form_view" model="ir.ui.view">
+        <field name="name">hms.doctors.form</field>
+        <field name="model">hms.doctors</field>
         <field name="arch" type="xml">
-
             <form>
-
                 <sheet>
-
                     <group>
-
                         <field name="first_name"/>
-
                         <field name="last_name"/>
-
-                        <field name="image"/>
-
+                        <field name="image" widget="image"/>
                     </group>
-
                 </sheet>
-
             </form>
-
         </field>
-
     </record>
 
-
-    <record id="doctor_action"
-            model="ir.actions.act_window">
-
-        <field name="name">
-            Doctors
-        </field>
-
-        <field name="res_model">
-            hms.doctors
-        </field>
-
-        <field name="view_mode">
-            tree,form
-        </field>
-
+    <record id="doctor_action" model="ir.actions.act_window">
+        <field name="name">Doctors</field>
+        <field name="res_model">hms.doctors</field>
+        <field name="view_mode">list,form</field>
     </record>
+
+    <!-- Doctors menu: visible to managers only -->
+    <menuitem id="doctor_menu"
+              name="Doctors"
+              parent="hms_main_menu"
+              action="doctor_action"
+              groups="hms.group_hms_manager"/>
 
 </odoo>

@@ -34,9 +34,12 @@ class Patient(models.Model):
 
     address = fields.Text(string="Address")
 
+    email = fields.Char(string="Email")
+
     age = fields.Integer(
         string="Age",
-        compute="_compute_age"
+        compute="_compute_age",
+        store=True
     )
 
     department_id = fields.Many2one(
@@ -148,3 +151,20 @@ class Patient(models.Model):
                 })
 
         return result
+
+    @api.constrains('email')
+    def check_email_valid(self):
+        for record in self:
+            if record.email:
+                # Basic email validation
+                import re
+                email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                if not re.match(email_pattern, record.email):
+                    raise ValidationError(
+                        "Please enter a valid email address."
+                    )
+
+    _unique_email = models.Constraint(
+        'UNIQUE(email)',
+        'This email address already exists in the patient records!'
+    )

@@ -1,0 +1,136 @@
+<odoo>
+
+    <!-- =============================== -->
+    <!-- Patient Status Report Template  -->
+    <!-- =============================== -->
+
+    <template id="report_patient_status_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="patient">
+                <t t-call="web.external_layout">
+
+                    <div class="page">
+
+                        <!-- Report Header -->
+                        <div class="row mb-4">
+                            <div class="col-8">
+                                <h2 style="color: #9B59B6; font-weight: bold;">
+                                    Patient Status Report
+                                </h2>
+                            </div>
+                            <div class="col-4 text-end">
+                                <t t-if="patient.image">
+                                    <img t-att-src="image_data_uri(patient.image)"
+                                         style="max-height: 120px; max-width: 120px; border-radius: 4px;"/>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Patient Info: Two-column layout -->
+                        <div class="row mb-4">
+
+                            <!-- Left Column -->
+                            <div class="col-6">
+                                <p>
+                                    <strong>Name: </strong>
+                                    <t t-esc="(patient.first_name or '') + ' ' + (patient.last_name or '')"/>
+                                </p>
+                                <p>
+                                    <strong>Age: </strong>
+                                    <t t-esc="patient.age"/>
+                                </p>
+                                <p>
+                                    <strong>Department: </strong>
+                                    <t t-esc="patient.department_id.name if patient.department_id else 'N/A'"/>
+                                </p>
+                                <p>
+                                    <strong>Doctors: </strong>
+                                    <t t-esc="', '.join([(d.first_name or '') + ' ' + (d.last_name or '') for d in patient.doctor_ids]) if patient.doctor_ids else 'N/A'"/>
+                                </p>
+                            </div>
+
+                            <!-- Right Column -->
+                            <div class="col-6">
+                                <p>
+                                    <strong>Birth Date: </strong>
+                                    <t t-esc="patient.birth_date"/>
+                                </p>
+                                <p>
+                                    <strong>PCR: </strong>
+                                    <t t-esc="patient.cr_ratio"/>
+                                </p>
+                                <p>
+                                    <strong>Blood Type: </strong>
+                                    <t t-esc="dict(patient._fields['blood_type'].selection).get(patient.blood_type, 'N/A')"/>
+                                </p>
+                                <p>
+                                    <strong>Email: </strong>
+                                    <t t-esc="patient.email or 'N/A'"/>
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <!-- Log History Table -->
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="text-center" style="color: #9B59B6; font-weight: bold;">
+                                    Log History
+                                </h5>
+                                <table class="table table-bordered table-sm">
+                                    <thead style="background-color: #9B59B6; color: white;">
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Date</th>
+                                            <th>Info</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="patient.log_ids" t-as="log">
+                                            <tr>
+                                                <td>
+                                                    <t t-esc="log.created_by.name"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="log.date"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="log.description"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <t t-if="not patient.log_ids">
+                                            <tr>
+                                                <td colspan="3" class="text-center text-muted">
+                                                    No log history available.
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+    <!-- =============================== -->
+    <!-- Report Action                   -->
+    <!-- =============================== -->
+
+    <record id="action_report_patient_status" model="ir.actions.report">
+        <field name="name">Patient Status Report</field>
+        <field name="model">hms.patient</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hms.report_patient_status_template</field>
+        <field name="report_file">hms.report_patient_status_template</field>
+        <field name="binding_model_id" ref="model_hms_patient"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

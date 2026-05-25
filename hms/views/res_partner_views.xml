@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit the partner form view to add related_patient_id field -->
+    <record id="view_partner_form_inherit_hms" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.hms</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Add related_patient_id in the Sales & Purchase tab under Misc group -->
+            <xpath expr="//page[@name='sales_purchases']//group[@name='misc']" position="inside">
+                <field name="related_patient_id"/>
+            </xpath>
+            
+            <!-- Make Tax ID field mandatory -->
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit the partner tree view to show website field -->
+    <record id="view_partner_tree_inherit_hms" model="ir.ui.view">
+        <field name="name">res.partner.tree.inherit.hms</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <!-- Add website field in the list view -->
+            <xpath expr="//field[@name='phone']" position="after">
+                <field name="website" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
